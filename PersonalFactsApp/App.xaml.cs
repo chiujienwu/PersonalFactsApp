@@ -8,13 +8,6 @@ namespace PersonalFactsApp
     public partial class App : Application
     {
         static FactDataDatabase database;
-        public App()
-        {
-            InitializeComponent();
-
-            MainPage = new MainPage();
-        }
-
         public static FactDataDatabase Database
         {
             get
@@ -23,10 +16,15 @@ namespace PersonalFactsApp
                 {
                     database = new FactDataDatabase();
                     prefillDatabase();
-
                 }
                 return database;
             }
+        }
+        public App()
+        {
+            InitializeComponent();
+
+            MainPage = new MainPage();
         }
 
         protected override void OnStart()
