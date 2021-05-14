@@ -44,7 +44,9 @@ namespace PersonalFactsApp
         static void prefillDatabase()
         {
             database.ClearAllAsync();
+
             List<FactData> items = new List<FactData>();
+
             items.Add(new FactData() { TheFact = "Jerry's birthday is in April", ShortFact = "Birthday", ImageUrl = "https://c.tadst.com/gfx/750w/the-month-april.jpg?1" });
             items.Add(new FactData() { TheFact = "Jerry has two sons", ShortFact = "Children", ImageUrl= "https://cdn3.vectorstock.com/i/1000x1000/19/87/happy-family-mother-and-father-with-two-sons-vector-8201987.jpg" });
             items.Add(new FactData() { TheFact = "Jerry's favorite baseball team is the NY Yankees", ShortFact = "Favorite Baseball Team", ImageUrl= "http://mobileimages.lowes.com//product/converted/500027/5000273689.jpg?size=pdhi" });
