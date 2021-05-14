@@ -10,93 +10,39 @@ namespace PersonalFactsApp
 {
     public class FactDataDatabase
     {
+        readonly SQLiteAsyncConnection _database;
 
-        /*https://docs.microsoft.com/en-us/xamarin/xamarin-forms/data-cloud/data/databases#create-a-database-access-class
-         *      
-         * Create a database access class
-         * A database wrapper class abstracts the data access layer from the rest of the app.This class centralizes query logic and simplifies the management of database initialization, making it easier to refactor or expand data operations as the app grows.The Todo app defines a TodoItemDatabase class for this purpose.
-         * 
-         * Lazy initialization
-         * The TodoItemDatabase uses asynchronous lazy initialization, represented by the custom AsyncLazy<T> class, to delay initialization of the database until it's first accessed:*/
-
-        static SQLiteAsyncConnection Database;
-
-        public static readonly AsyncLazy<FactDataDatabase> Instance = new AsyncLazy<FactDataDatabase>(async () =>
+        public FactDataDatabase(string dbPath)
         {
-            var instance = new FactDataDatabase();
-            CreateTableResult result = await Database.CreateTableAsync<FactData>();
-            return instance;
-        });
-
-        public FactDataDatabase()
-        {
-            Database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
+            _database = new SQLiteAsyncConnection(dbPath);
+            _database.CreateTableAsync<FactData>().Wait();
         }
 
-        /* Asynchronous lazy initialization
-         * 
-         * In order to start the database initialization, avoid blocking execution, and have the opportunity to catch exceptions, the sample application uses asynchronous lazy initalization, represented by the AsyncLazy<T> class:*/
-
-        public class AsyncLazy<T> : Lazy<Task<T>>
+        //Microsoft's methods
+        public Task<List<FactData>> GetFactDataAsync()
         {
-            readonly Lazy<Task<T>> instance;
-
-            public AsyncLazy(Func<T> factory)
-            {
-                instance = new Lazy<Task<T>>(() => Task.Run(factory));
-            }
-
-            public AsyncLazy(Func<Task<T>> factory)
-            {
-                instance = new Lazy<Task<T>>(() => Task.Run(factory));
-            }
-
-            public TaskAwaiter<T> GetAwaiter()
-            {
-                return instance.Value.GetAwaiter();
-            }
+            return _database.Table<FactData>().ToListAsync();
         }
 
-        public Task<List<FactData>> GetItemsAsync()
+        public Task<int> SaveFactDataAsync(FactData factData)
         {
-            return Database.Table<FactData>().ToListAsync();
+            return _database.InsertAsync(factData);
         }
 
-        public Task<List<FactData>> GetItemsNotDoneAsync()
+        //Matt's methods
+        public Task<int> InsertList(IEnumerable<FactData> factDatas)
         {
-            return Database.QueryAsync<FactData>("SELECT * FROM [TodoItem] WHERE [Done] = 0");
+            return _database.InsertAllAsync(factDatas);
         }
 
-        public Task<FactData> GetItemAsync(int id)
+        public Task<int> DeleteItemAsync(FactData factData)
         {
-            return Database.Table<FactData>().Where(i => i.Id == id).FirstOrDefaultAsync();
-        }
-
-        public Task<int> SaveItemAsync(FactData item)
-        {
-            if (item.Id != 0)
-            {
-                return Database.UpdateAsync(item);
-            }
-            else
-            {
-                return Database.InsertAsync(item);
-            }
-        }
-
-        public Task<int> DeleteItemAsync(FactData item)
-        {
-            return Database.DeleteAsync(item);
+            return _database.DeleteAsync(factData);
         }
 
         public Task<int> ClearAllAsync()
         {
-            return Database.DeleteAllAsync<FactData>();
-        }
-
-        public Task<int> InsertList(IEnumerable<FactData> items)
-        {
-            return Database.InsertAllAsync(items);
+            return _database.DeleteAllAsync<FactData>();
         }
     }
 }

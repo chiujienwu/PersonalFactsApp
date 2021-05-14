@@ -17,6 +17,7 @@ namespace PersonalFactsApp
         public string TheFact { get; set; }
         public string ShortFact { get; set; }
         public string ImageUrl { get; set; }
+
         //static FactData()
         //{
         //    List<FactData> all = new List<FactData>();

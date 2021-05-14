@@ -22,34 +22,34 @@ namespace PersonalFactsApp
         {
             base.OnAppearing();
 
-            listView.ItemsSource = await App.Database.GetItemsAsync();
+            listView.ItemsSource = await App.FactDataDatabase.GetFactDataAsync();
         }
 
-        async void OnSelection(object sender, SelectedItemChangedEventArgs e)
-        {
-            if (e.SelectedItem == null)
-            {
-                return;
-            }
-            FactData fact = (FactData)e.SelectedItem;
-            // DisplayAlert("The Fact", fact.TheFact, "Ok");
+        //async void OnSelection(object sender, SelectedItemChangedEventArgs e)
+        //{
+        //    if (e.SelectedItem == null)
+        //    {
+        //        return;
+        //    }
+        //    FactData fact = (FactData)e.SelectedItem;
+        //    // DisplayAlert("The Fact", fact.TheFact, "Ok");
 
-            var factData = (FactData)BindingContext;
-            FactDataDatabase database = await FactDataDatabase.Instance;
-            await database.SaveItemAsync(factData);
+        //    var factData = (FactData)BindingContext;
+        //    FactDataDatabase database = await FactDataDatabase.Instance;
+        //    await database.SaveItemAsync(factData);
 
-            // Navigate backwards
-            await Navigation.PopAsync();
-        }
+        //    // Navigate backwards
+        //    await Navigation.PopAsync();
+        //}
 
-        async void OnSaveClicked(object sender, EventArgs e)
-        {
-            var factData = (FactData)BindingContext;
-            FactDataDatabase database = await FactDataDatabase.Instance;
-            await database.SaveItemAsync(factData);
+        //async void OnSaveClicked(object sender, EventArgs e)
+        //{
+        //    var factData = (FactData)BindingContext;
+        //    FactDataDatabase database = await FactDataDatabase.Instance;
+        //    await database.SaveItemAsync(factData);
 
-            // Navigate backwards
-            await Navigation.PopAsync();
-        }
+        //    // Navigate backwards
+        //    await Navigation.PopAsync();
+        //}
     }
 }
